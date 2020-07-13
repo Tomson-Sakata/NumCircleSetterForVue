@@ -6,6 +6,7 @@ Vue.js
 
 # Usage
 1.copy src/components/NumCircleSetter.vue to your project.
+
 2.Embedded in the components of your project.
 
     <template>
