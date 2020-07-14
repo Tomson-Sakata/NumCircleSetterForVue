@@ -4,6 +4,9 @@ A component for Vue.js that allows numbers to be specified on a circle.
 # Requirement
 Vue.js
 
+# Screen shot
+![画面](https://github.com/Tomson-Sakata/NumCircleSetter/blob/images/screenshot_1.jpg)
+
 # Usage
 1.copy src/components/NumCircleSetter.vue to your project.
 
@@ -46,3 +49,5 @@ Vue.js
         markerColor ... Marker Color(default:{r:25, g:118, b:210, a:1})
         circleColor ... Color of the circle(default:{r:138, g:197, b:255, a:1})
         circleValueColor ... Color of the circle value(default:{r:255, g:0, b:0, a:1})
+
+![画面](https://github.com/Tomson-Sakata/NumCircleSetter/blob/images/properties_1.jpg)
