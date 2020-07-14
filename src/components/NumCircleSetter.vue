@@ -1,6 +1,10 @@
 <template>
-    <div :style="'width:'+size+'px; height:'+size+'px; position:relative;'">
+    <div :style="'width:'+size+'px; height:'+size+'px; position:relative; top:0, left:0'">
         <canvas ref="canvas" :width="size" :height="size" />
+        <div :style="textAreaStyle" ref="textArea">  <!-- "'position:absolute; top:50%; left:50%; width:'+(innerRadius * 2)+'px'" ref="textArea"> -->
+            <slot />
+            <!-- <span :style="labelStyle">{{value.toFixed(2)}}</span>             -->
+        </div>
     </div>
 </template>
 
@@ -61,7 +65,7 @@
                         r:255, g:0, b:0, a:1
                     }
                 }
-            }
+            },
         },
         computed: {
             returnValue: {
@@ -71,7 +75,7 @@
                 set: function (v) {
                     this.$emit("input", v)
                 }
-            }
+            },
         },
         data: function () {
             return {
@@ -88,6 +92,7 @@
                 markerEffectColorRGBA: "",
                 circleColorRGBA: "",
                 circleValueColorRGBA: "",
+                textAreaStyle: ""
             }
         },
         mounted: function () {
@@ -106,6 +111,19 @@
 
             this.circleColorRGBA = "rgba("+this.circleColor.r+","+this.circleColor.g+","+this.circleColor.b+","+this.circleColor.a+")"
             this.circleValueColorRGBA = "rgba("+this.circleValueColor.r+","+this.circleValueColor.g+","+this.circleValueColor.b+","+this.circleValueColor.a+")"
+
+            const textAreaPosition = this.getRotatedPosition(this.center.x, this.center.y, this.center.x, this.center.y - this.innerRadius, 360 - 45)
+            const textAreaSize = ( this.center.x - textAreaPosition.x ) * 2
+            this.textAreaStyle = {
+                "position": "absolute",
+                "display": "flex",
+                "justify-content": "center",
+                "align-items": "center",
+                "top": textAreaPosition.y.toFixed(0) + "px",
+                "left": textAreaPosition.x.toFixed(0) + "px",
+                "width": textAreaSize + "px",
+                "height": textAreaSize + "px",
+            }
 
             this.canvas.addEventListener("mousedown", function (e) {
                 if (self.state != "idle") return
@@ -246,6 +264,12 @@
             getPosition (x, y) {
                 const rect = this.canvas.getBoundingClientRect()
                 return new Position((x - rect.left) / this.scaling, (y - rect.top) / this.scaling)
+            },
+            getRotatedPosition (centerX, centerY, positionX, positionY, deg) {
+                const r = this.toRadian(deg)
+                const x = ((positionX - centerX) * Math.cos(r) - (positionY - centerY) * Math.sin(r)) + centerX
+                const y = ((positionX - centerX) * Math.sin(r) + (positionY - centerY) * Math.cos(r)) + centerY
+                return new Position(x, y)
             },
             getAngle (x, y) {
                 var deg = Math.atan2(y - this.center.y, x - this.center.x) * ( 180 / Math.PI ) + 90
